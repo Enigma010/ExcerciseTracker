@@ -1,0 +1,26 @@
+{
+  "name": "excercisetracker",
+  "version": "1.0.0",
+  "description": "Website to track excercises",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enigma010/ExcerciseTracker.git"
+  },
+  "author": "Jeremy Jodarski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Enigma010/ExcerciseTracker/issues"
+  },
+  "homepage": "https://github.com/Enigma010/ExcerciseTracker#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "lodash": "^4.17.5",
+    "sqlite3": "^4.0.0",
+    "uuid": "^3.2.1"
+  }
+}
