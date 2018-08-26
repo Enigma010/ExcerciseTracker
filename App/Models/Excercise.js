@@ -1,18 +1,15 @@
 const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
+
 const ExcerciseInstance = require('./ExcerciseInstance.js');
+const Generic = require('./Generic.js');
 
 module.exports = class Excercise{
     constructor(id){
-        if(_.isNull(id)){
-            this.Id = uuidv4();
-        }
-        else{
-            this.Id = id;
-        }
+        Generic.AddGuidId(this, id);
     }
 
-    GetInstances(){
+    static GetInstances(){
         let excerciseInstances = [];
         if(this.NumberOfSets > 0){
             for(let setNumber = 0; setNumber < this.NumberOfSets; setNumber++){

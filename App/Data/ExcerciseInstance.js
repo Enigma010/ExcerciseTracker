@@ -1,9 +1,9 @@
 const sqlite = require('sqlite3');
 const _ = require('lodash');
 
-const GenericData = require('./Generic.js');
+const Generic = require('./Generic.js');
 
-module.exports = class ExcerciseInstanceData extends GenericData{
+module.exports = class ExcerciseInstance extends Generic{
     constructor(database){
         super(database, 
             {

@@ -1,12 +1,9 @@
 const uuidv4 = require('uuid/v4');
 
+const Generic = require('./Generic.js');
+
 module.exports = class User{
     constructor(id){
-        if(_.isNull(id)){
-            this.Id = uuidv4();
-        }
-        else{
-            this.Id = id;
-        }
+        Generic.AddGuidId(this, id);
     }
 }

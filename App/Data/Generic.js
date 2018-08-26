@@ -1,7 +1,7 @@
 const sqlite = require('sqlite3');
 const _ = require('lodash');
 
-module.exports = class GenericData{
+module.exports = class Generic{
 
     constructor(database, statements){
         this.Database = database;
@@ -11,7 +11,6 @@ module.exports = class GenericData{
 
     RunQuery(data, query, callback){
         let statement = this.Database.Store.prepare(query);
-        let self = this;
         let parameters = this.QueryDataParameters(query, data);
         statement.run(parameters, function(error){
             callback(error);
