@@ -18,7 +18,7 @@ module.exports = class ExcerciseInstance{
         }
     }
 
-    static CreateFromExcercise(excercise){
+    static InstancesFromExcercise(excercise){
         var instances = [];
         if(excercise.NumberOfSets){
             for(var setNumber = 0; excercise.NumberOfSets < setNumber; setNumber++){

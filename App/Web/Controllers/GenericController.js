@@ -3,22 +3,21 @@ const _ = require('lodash');
 const Response = require('./../Response.js');
 
 module.exports = class GenericController{
-    constructor(response){
-        this.Response = response;
+    constructor(server, database){
+        this.Server = server;
+        this.Database = database;
     }
 
-    SendResponse(error){
-        this.Response.json(this.GetErrorResponse(error));    
+    Create(request, model){
+        let json = request.body;
+        delete json.Id;
+        _.assignIn(model, json);
+        this.Database.Create(model, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
-    SendResponseAndData(error, data){
+    SendResponse(error, data){
         let response = this.GetErrorResponse(error);
-        if(data != null && Array.isArray(data)){
-            response.Data = data[0];
-        }
-        else{
-            response.Data = data;
-        }
+        response.Data = data;
         this.Response.json(response);
     }
 

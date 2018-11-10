@@ -1,11 +1,10 @@
 
-module.exports = class Response{
-    constructor(errorCode, message){
-        this.ErrorCode = errorCode;
-        this.Message = message;
-    }
+const Error = require('./Error.js');
 
-    get IsError(){
-        return this.ErrorCode === 0;
+module.exports = class Response{
+    constructor(errorCode, message, data){
+        this.Response = {};
+        this.Response.Data = data;
+        this.Response.Error = new Error(errorCode, message);
     }
 }

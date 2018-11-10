@@ -7,11 +7,10 @@ const Response = require('./../Response.js');
 const ExcerciseModel = require('./../../Models/Excercise.js');
 const ExcerciseDb = require('../../Data/Excercise.js');
 
-module.exports = class ExcerciseController{
+module.exports = class ExcerciseController extends GenericController{
     
     constructor(server, database){
-        this.Server = server;
-        this.Database = new ExcerciseDb(database);
+        super(server, new ExcerciseDb(database));
         this.Setup();
     }
 
@@ -22,26 +21,26 @@ module.exports = class ExcerciseController{
         delete excerciseJson.Id;
         _.assignIn(excercise, excerciseJson);
 
-        this.GenericController = new GenericController(response);
-        this.Database.Create(excercise, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Response = response;
+        this.Database.Create(excercise, _.bind(this.SendResponse, this));
     }
 
     Read(request, response){
         let excerciseJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Read(excerciseJson.Id, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Response = response;
+        this.Database.Read(excerciseJson.Id, _.bind(this.SendResponse, this));
     }
 
     Update(request, response){
         let excerciseJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Update(excerciseJson, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Response = response;
+        this.Database.Update(excerciseJson, _.bind(this.SendResponse, this));
     }
 
     Delete(request, response){
         let excerciseJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Delete(excerciseJson.Id, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Response = response;
+        this.Database.Delete(excerciseJson.Id, _.bind(this.SendResponse, this));
     }
 
     GetWorkoutFromJson(request){

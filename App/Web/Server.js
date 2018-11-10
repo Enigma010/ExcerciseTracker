@@ -13,7 +13,7 @@ module.exports = class Server{
         this.ListenOnPort = listenOnPort;
         this.Server = express();
         this.Server.use(bodyParser.json());
-        this.Server.listen(this.ListenOnPort);
+        this.Listener = this.Server.listen(this.ListenOnPort);
         this.Database = database;
         this.SetupControllers();
     }

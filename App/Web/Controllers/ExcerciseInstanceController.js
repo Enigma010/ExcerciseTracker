@@ -17,12 +17,12 @@ module.exports = class ExcerciseInstanceController{
 
     Create(request, response){
         this.GenericController = new GenericController(response);
-        this.Database.Create(request.body, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Database.Create(request.body, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
     Read(request, response){
         this.GenericController = new GenericController(response);
-        this.Database.Read(request.body.Id, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Database.Read(request.body.Id, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
     Update(request, response){

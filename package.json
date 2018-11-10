@@ -4,7 +4,7 @@
   "description": "Website to track excercises",
   "main": "index.js",
   "scripts": {
-    "test": "mocha \"App\\Tests/**/*.js\""
+    "test": "mocha --inspect-brk \"test/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,9 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
+    "fs-extra": "^7.0.1",
     "lodash": "^4.17.5",
+    "request": "^2.88.0",
     "sqlite3": "^4.0.0",
     "uuid": "^3.2.1"
   },
