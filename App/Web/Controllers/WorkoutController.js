@@ -44,7 +44,7 @@ module.exports = class WorkoutController{
     Delete(request, response){
         let workoutJson = request.body;
         this.GenericController = new GenericController(response);
-        this.Database.Delete(workoutJson.Id, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Database.Delete(workoutJson, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
     GetWorkoutFromJson(request){

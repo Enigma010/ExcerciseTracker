@@ -26,21 +26,18 @@ module.exports = class ExcerciseController extends GenericController{
     }
 
     Read(request, response){
-        let excerciseJson = request.body;
         this.Response = response;
-        this.Database.Read(excerciseJson.Id, _.bind(this.SendResponse, this));
+        this.Database.Read(request.body, _.bind(this.SendResponse, this));
     }
 
     Update(request, response){
-        let excerciseJson = request.body;
         this.Response = response;
-        this.Database.Update(excerciseJson, _.bind(this.SendResponse, this));
+        this.Database.Update(request.body, _.bind(this.SendResponse, this));
     }
 
     Delete(request, response){
-        let excerciseJson = request.body;
         this.Response = response;
-        this.Database.Delete(excerciseJson.Id, _.bind(this.SendResponse, this));
+        this.Database.Delete(request.body, _.bind(this.SendResponse, this));
     }
 
     GetWorkoutFromJson(request){

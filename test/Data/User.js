@@ -8,7 +8,7 @@ const WebRequest = require('../../App/Web/Utilities/WebRequest.js');
 const HttpCrudUtilities = require('../Utilities/HttpCrudUtilities.js');
 
 describe('Data', function () {
-    describe('Excercise', function () {
+    describe('User', function () {
         var server;
 
         beforeEach(function () {
@@ -21,31 +21,31 @@ describe('Data', function () {
         });
 
         it('Create', function (done) {
-            let excercise = {};
-            excercise.Name = uuidv4();
+            let user = {};
+            user.Name = uuidv4();
             let assertFunc = function(body, model){
                 assert.equal(Array.isArray(body.Data), true);
                 assert.equal(body.Data.length, 1);
                 assert.equal(body.Data[0].Name, model.Name);
             };
-            HttpCrudUtilities.CreateUnitTest(server, excercise, 'excercise', assertFunc, done);
+            HttpCrudUtilities.CreateUnitTest(server, user, 'user', assertFunc, done);
         });
 
         it('Read', function (done) {
-            var excercise = {};
-            excercise.Name = uuidv4();
+            var user = {};
+            user.Name = uuidv4();
 
             var assertFunc = function(body, model){
                 assert.equal(Array.isArray(body.Data), true);
                 assert.equal(body.Data.length, 1);
                 assert.equal(body.Data[0].Name, model.Name);
             };
-            HttpCrudUtilities.ReadUnitTest(server, excercise, 'excercise', assertFunc, assertFunc, done);
+            HttpCrudUtilities.ReadUnitTest(server, user, 'user', assertFunc, assertFunc, done);
         });
 
         it('Update', function(done){
-            var excercise = {};
-            excercise.Name = uuidv4();
+            var user = {};
+            user.Name = uuidv4();
 
             var assertFunc = function(body, model){
                 assert.equal(Array.isArray(body.Data), true);
@@ -57,12 +57,12 @@ describe('Data', function () {
                 model.Name = require('uuid/v4')();
             };
 
-            HttpCrudUtilities.UpdateUnitTest(server, excercise, 'excercise', assertFunc, updateModelFunc, assertFunc, done);
+            HttpCrudUtilities.UpdateUnitTest(server, user, 'user', assertFunc, updateModelFunc, assertFunc, done);
         });
 
         it('Delete', function (done) {
-            var excercise = {};
-            excercise.Name = uuidv4();
+            var user = {};
+            user.Name = uuidv4();
             var createAssertFunc = function(body, model){
                 assert.equal(Array.isArray(body.Data), true);
                 assert.equal(body.Data.length, 1);
@@ -72,36 +72,7 @@ describe('Data', function () {
                 assert.equal(Array.isArray(body.Data), true);
                 assert.equal(body.Data.length, 0);
             };
-            HttpCrudUtilities.DeleteUnitTest(server, excercise, 'excercise', createAssertFunc, readAssertFunc, done);
+            HttpCrudUtilities.DeleteUnitTest(server, user, 'user', createAssertFunc, readAssertFunc, done);
         });
-
-        // it('Delete', function (done) {
-        //     var excercise = {};
-        //     excercise.Name = uuidv4();
-        //     var createPromise = WebRequest.ModelRequestCreate(server, excercise, 'excercise');
-        //     createPromise.then(function(body){
-        //         assert.equal(Array.isArray(body.Data), true);
-        //         assert.equal(body.Data.length, 1);
-        //         assert.equal(body.Data[0].Name, excercise.Name);
-
-        //         excercise = body.Data[0];
-
-        //         var deletePromise = WebRequest.ModelRequestDelete(server, excercise, 'excercise');
-        //         deletePromise.then(function(body){
-        //             var readPromise = WebRequest.ModelRequestRead(server, excercise, 'excercise');
-        //             readPromise.then(function(body){
-        //                 assert.equal(Array.isArray(body.Data), true);
-        //                 assert.equal(body.Data.length, 0);
-        //                 done();
-        //             }).catch(function(response){
-        //                 done(new Error(response));
-        //             });
-        //         }).catch(function(response){
-        //             done(new Error(response));
-        //         });
-        //     }).catch(function(response){
-        //         done(new Error(response));
-        //     });
-        // });
     });
 });

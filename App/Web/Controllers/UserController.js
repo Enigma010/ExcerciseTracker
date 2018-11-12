@@ -7,11 +7,10 @@ const Response = require('./../Response.js');
 const User = require('./../../Models/User.js');
 const UserDb = require('./../../Data/User.js');
 
-module.exports = class UserController{
+module.exports = class UserController extends GenericController{
     
     constructor(server, database){
-        this.Server = server;
-        this.Database = new UserDb(database);
+        super(server, new UserDb(database));
         this.Setup();
     }
 
@@ -22,26 +21,23 @@ module.exports = class UserController{
         delete userJson.Id;
         _.assignIn(user, userJson);
 
-        this.GenericController = new GenericController(response);
-        this.Database.Create(user, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Response = response;
+        this.Database.Create(user, _.bind(this.SendResponse, this));
     }
 
     Read(request, response){
-        let userJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Read(userJson.Id, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Response = response;
+        this.Database.Read(request.body, _.bind(this.SendResponse, this));
     }
 
     Update(request, response){
-        let userJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Update(userJson, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Response = response;
+        this.Database.Update(request.body, _.bind(this.SendResponse, this));
     }
 
     Delete(request, response){
-        let userJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Delete(userJson.Id, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Response = response;
+        this.Database.Delete(request.body, _.bind(this.SendResponse, this));
     }
 
     GetUserFromJson(request){

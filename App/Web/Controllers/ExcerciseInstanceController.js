@@ -32,7 +32,7 @@ module.exports = class ExcerciseInstanceController{
 
     Delete(request, response){
         this.GenericController = new GenericController(response);
-        this.Database.Delete(request.body.Id, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Database.Delete(request.body, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
     Setup(){

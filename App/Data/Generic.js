@@ -11,29 +11,15 @@ module.exports = class Generic{
     }
 
     RunQuery(data, query, callback){
-        let statement = this.Database.Store.prepare(query);
-        let parameters = this.QueryDataParameters(query, data);
-        statement.run(parameters, function(error){
-            statement.finalize();
-            callback(error);
-        });
-    }
-
-    RunQueryP(data, query){
-        var promise = new Promise(function(resolve, reject){
-            let statement = this.Database.Store.prepare(query);
-            let parameters = this.QueryDataParameters(query, data);
+        var self = this;
+        this.Database.Store.serialize(function(){
+            let statement = self.Database.Store.prepare(query);
+            let parameters = self.QueryDataParameters(query, data);
             statement.run(parameters, function(error){
                 statement.finalize();
-                if(error !== null){
-                    resolve();
-                }
-                else{
-                    reject(error);
-                }
-            });            
+                callback(error);
+            });
         });
-        return promise;
     }
 
     Create(data, callback, readRequest, readQuery){
@@ -49,40 +35,14 @@ module.exports = class Generic{
                     });
                 }
                 else{
-                    var id = null;
-                    if(data.hasOwnProperty("Id")){
-                        id = data.Id;
-                    }
-                    else{
-                        id = data;
-                    }
-                    self.Read(id, callback);
+                    self.Read(data, callback);
                 }
             }
         });
     }
 
-    CreateP(data, resolve, reject, readRequest, readQuery){
-        let self = this;
-        var promise = new Promise(
-            function(data){
-                RunQueryP(data, this.Statements.Create).then(function(data){
-                    if(!_.isNull(readRequest) && !_.isUndefined(readRequest) && !_.isNull(readQuery) && !_.isUndefined(readQuery)){
-                    }
-                    resolve(data);
-                },
-                function(error){
-                    reject(error);
-                });
-            },
-            function(error){
-                reject(error);
-            });
-        return promise;
-    }
-
-    Read(id, callback){
-        this.ReadByQuery({Id: id}, this.Statements.Read, callback);
+    Read(data, callback){
+        this.ReadByQuery(data, this.Statements.Read, callback);
     }
 
     ReadByQuery(request, query, callback){
@@ -90,72 +50,36 @@ module.exports = class Generic{
         let parameters = this.QueryDataParameters(query, request);
 
         let results = [];
-        let callbackCalled = false;
 
-        statement.each(parameters
-            , function(error, data){
-                statement.finalize();
-                if(!_.isNull(error) || _.isUndefined(error)){
-                    callback(error);
+        this.Database.Store.serialize(function(){
+            statement.each(parameters
+                , function(error, data){
+                    if(!_.isNull(error) || _.isUndefined(error)){
+                        callback(error);
+                    }
+                    else{
+                        results[results.length] = data;
+                    }
                 }
-                else{
-                    results[results.length] = data;
+                , function(error){
+                    statement.finalize();
+                    if(!_.isNull(error) || _.isUndefined(error)){
+                        callback(error);
+                    }
+                    else{
+                        callback(error, results);
+                    }
                 }
-            }
-            , function(error){
-                if(!_.isNull(error) || _.isUndefined(error)){
-                    callback(error);
-                }
-                else{
-                    callback(error, results);
-                }
-            }
-        );
-    }
-
-    ReadByQueryP(request, query, callback){
-        let statement = this.Database.Store.prepare(query);
-        let parameters = this.QueryDataParameters(query, request);
-
-        let results = [];
-        let callbackCalled = false;
-
-        statement.each(parameters
-            , function(error, data){
-                statement.finalize();
-                if(!_.isNull(error) || _.isUndefined(error)){
-                    callback(error);
-                }
-                else{
-                    results[results.length] = data;
-                }
-            }
-            , function(error){
-                if(!_.isNull(error) || _.isUndefined(error)){
-                    callback(error);
-                }
-                else{
-                    callback(error, results);
-                }
-            }
-        );
+            )
+        });
     }
 
     Update(data, callback){
-        let statement = this.Database.Store.prepare(this.Statements.Update);
-        let parameters = this.QueryDataParameters(this.Statements.Update, data);
-        statement.run(parameters, function(error){
-            statement.finalize();
-            callback(error);
-        });
+        this.RunQuery(data, this.Statements.Update, callback);
     }
 
-    Delete(id, callback){
-        let statement = this.Database.Store.prepare(this.Statements.Delete);
-        statement.run(id, function(error){
-            statement.finalize();
-            callback(error);
-        });
+    Delete(data, callback){
+        this.RunQuery(data, this.Statements.Delete, callback);
     }
 
     Setup(){
