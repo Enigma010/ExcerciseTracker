@@ -9,11 +9,10 @@ const WorkoutDb = require('./../../Data/Workout.js');
 
 const GenericModel = require('../../Models/Generic.js');
 
-module.exports = class WorkoutController{
+module.exports = class WorkoutController extends GenericController{
     
     constructor(server, database){
-        this.Server = server;
-        this.Database = new WorkoutDb(database);
+        super(server, new WorkoutDb(database));
         this.Setup();
     }
 
@@ -24,27 +23,23 @@ module.exports = class WorkoutController{
         delete workoutJson.Id;
         GenericModel.AddGuidId(workout);
         _.assignIn(workout, workoutJson);
-
-        this.GenericController = new GenericController(response);
-        this.Database.Create(workout, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Response = response;
+        this.Database.Create(workout, _.bind(this.SendResponse, this));
     }
 
     Read(request, response){
-        let workoutJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Read(workoutJson.Id, _.bind(this.GenericController.SendResponseAndData, this.GenericController));
+        this.Response = response;
+        this.Database.Read(request.body, _.bind(this.SendResponse, this));
     }
 
     Update(request, response){
-        let workoutJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Update(workoutJson, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Response = response;
+        this.Database.Update(request.body, _.bind(this.SendResponse, this));
     }
 
     Delete(request, response){
-        let workoutJson = request.body;
-        this.GenericController = new GenericController(response);
-        this.Database.Delete(workoutJson, _.bind(this.GenericController.SendResponse, this.GenericController));
+        this.Response = response;
+        this.Database.Delete(request.body, _.bind(this.SendResponse, this));
     }
 
     GetWorkoutFromJson(request){
