@@ -9,7 +9,7 @@ const HttpCrudUtilities = require('../Utilities/HttpCrudUtilities.js');
 
 describe('Data', function () {
     describe('Workout', function () {
-        var server;
+        let server;
 
         beforeEach(function () {
             server = ExcerciseTrackerServerUtilities.GetTestServer();
@@ -20,69 +20,48 @@ describe('Data', function () {
             ExcerciseTrackerServerUtilities.FinalizeTestServer(server);
         });
 
+        let assertFunc = function(body, model){
+            assert.equal(Array.isArray(body.Data), true);
+            assert.equal(body.Data.length, 1);
+            assert.equal(body.Data[0].Name, model.Name);
+            assert.equal(body.Data[0].Description, model.Description);
+        };
+
         it('Create', function (done) {
             let workout = {};
             workout.Name = uuidv4();
             workout.Description = uuidv4();
-            let assertFunc = function(body, model){
-                assert.equal(Array.isArray(body.Data), true);
-                assert.equal(body.Data.length, 1);
-                assert.equal(body.Data[0].Name, model.Name);
-                assert.equal(body.Data[0].Description, model.Description);
-            };
             HttpCrudUtilities.CreateUnitTest(server, workout, 'workout', assertFunc, done);
         });
 
         it('Read', function (done) {
-            var workout = {};
+            let workout = {};
             workout.Name = uuidv4();
-            workout.Description = uuidv4();
-
-            var assertFunc = function(body, model){
-                assert.equal(Array.isArray(body.Data), true);
-                assert.equal(body.Data.length, 1);
-                assert.equal(body.Data[0].Name, model.Name);
-                assert.equal(body.Data[0].Description, model.Description);
-            };
-            
+            workout.Description = uuidv4();  
             HttpCrudUtilities.ReadUnitTest(server, workout, 'workout', assertFunc, assertFunc, done);
         });
 
         it('Update', function(done){
-            var workout = {};
+            let workout = {};
             workout.Name = uuidv4();
             workout.Description = uuidv4();
-            
-            var assertFunc = function(body, model){
-                assert.equal(Array.isArray(body.Data), true);
-                assert.equal(body.Data.length, 1);
-                assert.equal(body.Data[0].Name, model.Name);
-                assert.equal(body.Data[0].Description, model.Description);
+            let updateModelFunc = function(model){
+                let uuid = require('uuid/v4')
+                model.Name = uuid();
+                model.Description = uuid();
             };
-
-            var updateModelFunc = function(model){
-                model.Name = require('uuid/v4')();
-            };
-
             HttpCrudUtilities.UpdateUnitTest(server, workout, 'workout', assertFunc, updateModelFunc, assertFunc, done);
         });
 
         it('Delete', function (done) {
-            var workout = {};
+            let workout = {};
             workout.Name = uuidv4();
             workout.Description = uuidv4();
-            
-            var createAssertFunc = function(body, model){
-                assert.equal(Array.isArray(body.Data), true);
-                assert.equal(body.Data.length, 1);
-                assert.equal(body.Data[0].Name, model.Name);
-                assert.equal(body.Data[0].Description, model.Description);
-            };
-            var readAssertFunc = function(body, model){
+            let readAssertFunc = function(body, model){
                 assert.equal(Array.isArray(body.Data), true);
                 assert.equal(body.Data.length, 0);
             };
-            HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', createAssertFunc, readAssertFunc, done);
+            HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', assertFunc, readAssertFunc, done);
         });
     });
 });

@@ -9,16 +9,16 @@ describe('Data', function() {
   describe('GenericTests', function(){
     describe('QueryParameters', function() {
       it('Should find a single parameter $Id', function(done) {
-        var generic = new Generic();
-        var query = 'select * from Table where Id = $Id';
-        var parameters = generic.QueryParameters(query)
+        let generic = new Generic();
+        let query = 'select * from Table where Id = $Id';
+        let parameters = generic.QueryParameters(query)
         assert.equal(ArrayUtilities.ContentsEqual(parameters, ['$Id']), true);
         done();
       });
       it('Should find two paramters $Id and $Name', function(done){
-        var generic = new Generic();
-        var query = 'insert into Users (Id, Name) values ($Id, $Name)';
-        var parameters = generic.QueryParameters(query);
+        let generic = new Generic();
+        let query = 'insert into Users (Id, Name) values ($Id, $Name)';
+        let parameters = generic.QueryParameters(query);
         assert.equal(ArrayUtilities.ContentsEqual(parameters, ['$Id', '$Name']), true);
         done();
       });

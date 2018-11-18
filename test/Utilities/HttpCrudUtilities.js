@@ -5,7 +5,7 @@ const WebRequest = require('../../App/Web/Utilities/WebRequest.js');
 
 module.exports = class HttpCrudUtilities{
     static CreateUnitTest(server, model, modelNoun, assertFunc, doneFunc){
-        var promise = WebRequest.ModelRequestCreate(server, model, modelNoun);
+        let promise = WebRequest.ModelRequestCreate(server, model, modelNoun);
         promise.then(function(body){
             assertFunc(body, model);
             doneFunc();
@@ -15,10 +15,10 @@ module.exports = class HttpCrudUtilities{
     }
 
     static ReadUnitTest(server, model, modelNoun, createAssertFunc, readAssertFunc, doneFunc){
-        var createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
+        let createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
         createPromise.then(function(body){
             createAssertFunc(body, model);
-            var readPromise = WebRequest.ModelRequestRead(server, {Id: body.Data[0].Id }, modelNoun);
+            let readPromise = WebRequest.ModelRequestRead(server, {Id: body.Data[0].Id }, modelNoun);
             readPromise.then(function(body){
                 readAssertFunc(body, model);
                 doneFunc();
@@ -31,14 +31,14 @@ module.exports = class HttpCrudUtilities{
     }
 
     static UpdateUnitTest(server, model, modelNoun, createAssertFunc, updateModelFunc, readAssertFunc, doneFunc){
-        var createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
+        let createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
         createPromise.then(function(body){
             createAssertFunc(body, model);
             model = body.Data[0];
             updateModelFunc(model);
-            var updatePromise = WebRequest.ModelRequestUpdate(server, model, modelNoun);
+            let updatePromise = WebRequest.ModelRequestUpdate(server, model, modelNoun);
             updatePromise.then(function(body){
-                var readPromise = WebRequest.ModelRequestRead(server, model, modelNoun);
+                let readPromise = WebRequest.ModelRequestRead(server, model, modelNoun);
                 readPromise.then(function(body){
                     readAssertFunc(body, model);
                     doneFunc();
@@ -54,13 +54,13 @@ module.exports = class HttpCrudUtilities{
     }
 
     static DeleteUnitTest(server, model, modelNoun, createAssertFunc, readAssertFunc, doneFunc){
-        var createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
+        let createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
         createPromise.then(function(body){
             createAssertFunc(body, model);
             model = body.Data[0];
-            var deletePromise = WebRequest.ModelRequestDelete(server, model, modelNoun);
+            let deletePromise = WebRequest.ModelRequestDelete(server, model, modelNoun);
             deletePromise.then(function(body){
-                var readPromise = WebRequest.ModelRequestRead(server, model, modelNoun);
+                let readPromise = WebRequest.ModelRequestRead(server, model, modelNoun);
                 readPromise.then(function(body){
                     readAssertFunc(body, model);
                     doneFunc();

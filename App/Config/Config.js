@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
-var path = require('path');
-var fs = require('fs-extra');
+const path = require('path');
+const fs = require('fs-extra');
 
 module.exports = class Config{
 

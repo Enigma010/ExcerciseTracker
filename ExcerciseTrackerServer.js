@@ -6,7 +6,6 @@ const Database = require('./App/Data/Database.js');
 
 module.exports = class ExcerciseTrackerServer{
     constructor(overrideConfig){
-        var config = null;
         if(!_.isUndefined(overrideConfig)){
             this.Config = overrideConfig;
         }

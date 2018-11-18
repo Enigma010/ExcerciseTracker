@@ -58,15 +58,15 @@ module.exports = class WorkoutInstance{
                         return;
                     }
                     _.forEach(results, function(workoutExcercise){
-                        var excerciseRead = {};
+                        let excerciseRead = {};
                         excerciseRead.Id = workoutExcercise.ExcerciseId;
                         excerciseDb.Read(excerciseRead, function(error, results){
                             if(!_.isNull(error) || _.isUndefined(error)){
                                 callback(error);
                                 return;
                             }
-                            var excercise = results[0];
-                            var excerciseInstances = ExcerciseInstanceModel.CreateFromExcercise(excercise);
+                            let excercise = results[0];
+                            let excerciseInstances = ExcerciseInstanceModel.CreateFromExcercise(excercise);
                             excerciseInstanceDb.Create(excerciseInstances, function(error, results){
                                 if(!_.isNull(error) || _.isUndefined(error)){
                                     callback(error);

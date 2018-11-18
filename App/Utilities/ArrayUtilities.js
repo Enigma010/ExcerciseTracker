@@ -3,8 +3,8 @@ const _ = require('lodash');
 
 module.exports = class ArrayUtilities{
     static ContentsEqual(leftArray, rightArray){
-        var leftArrayUndefined = _.isUndefined(leftArray);
-        var rightArrayUndefined = _.isUndefined(rightArray);
+        let leftArrayUndefined = _.isUndefined(leftArray);
+        let rightArrayUndefined = _.isUndefined(rightArray);
         if(leftArrayUndefined && rightArrayUndefined){
             return true;
         }
@@ -17,7 +17,7 @@ module.exports = class ArrayUtilities{
         if(leftArray.length == 0 && rightArray.length == 0){
             return true;
         }
-        var found = false;
+        let found = false;
         _.forEach(leftArray, function(leftItem){
             found = false;
             _.forEach(rightArray, function(rightItem){

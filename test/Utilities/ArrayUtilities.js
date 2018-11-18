@@ -7,20 +7,20 @@ describe('Utilities', function() {
     describe('ArrayUtilities', function(){
         describe('ContentsEqual', function() {
             it('Left and Right Side Equal 1 element', function(done) {
-                var left = ['$Id'];
-                var right = ['$Id'];
+                let left = ['$Id'];
+                let right = ['$Id'];
                 assert.equal(ArrayUtilities.ContentsEqual(left, right), true);
                 done();
             });
             it('Left and Right Side Equals 2 elements not in order', function(done){
-                var left = ['$Name', '$Id'];
-                var right = ['$Id', '$Name'];
+                let left = ['$Name', '$Id'];
+                let right = ['$Id', '$Name'];
                 assert.equal(ArrayUtilities.ContentsEqual(left, right), true);
                 done();
             });
             it('Left and Right Side Not Equal 0 elements', function(done){
-                var left = [];
-                var right = [];
+                let left = [];
+                let right = [];
                 assert.equal(ArrayUtilities.ContentsEqual(left, right), true);
                 done();
             });

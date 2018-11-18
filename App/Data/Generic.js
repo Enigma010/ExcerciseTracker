@@ -10,18 +10,6 @@ module.exports = class Generic{
         this.Setup();
     }
 
-    RunQuery(data, query, callback){
-        var self = this;
-        this.Database.Store.serialize(function(){
-            let statement = self.Database.Store.prepare(query);
-            let parameters = self.QueryDataParameters(query, data);
-            statement.run(parameters, function(error){
-                statement.finalize();
-                callback(error);
-            });
-        });
-    }
-
     Create(data, callback, readRequest, readQuery){
         let self = this;
         this.RunQuery(data, this.Statements.Create, function(error){
@@ -84,11 +72,23 @@ module.exports = class Generic{
 
     Setup(){
         if(this.Statements !== null && this.Statements !== undefined && this.Statements.Setup){
-            var self = this;
+            let self = this;
             this.Database.Store.serialize(function(){
                 self.Database.Store.run(self.Statements.Setup);
             }); 
         }
+    }
+
+    RunQuery(data, query, callback){
+        let self = this;
+        this.Database.Store.serialize(function(){
+            let statement = self.Database.Store.prepare(query);
+            let parameters = self.QueryDataParameters(query, data);
+            statement.run(parameters, function(error){
+                statement.finalize();
+                callback(error);
+            });
+        });
     }
 
     QueryDataParameters(query, data){
@@ -109,9 +109,9 @@ module.exports = class Generic{
     }
 
     QueryParameters(query){
-        var parameters = [];
-        var parameterRegex = /(\$.\w*)\b/g;
-        var match = parameterRegex.exec(query);
+        let parameters = [];
+        let parameterRegex = /(\$.\w*)\b/g;
+        let match = parameterRegex.exec(query);
         while(match != null){
             parameters.push(match[0]);
             match = parameterRegex.exec(query);
@@ -120,7 +120,7 @@ module.exports = class Generic{
     }
 
     DataParameters(data){
-        var parameters = {};
+        let parameters = {};
         _.forEach(Object.keys(data), function(key){
             if (data.hasOwnProperty(key)) {
                 parameters["$" + key] = data[key];
