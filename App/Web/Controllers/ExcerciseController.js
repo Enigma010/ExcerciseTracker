@@ -4,7 +4,7 @@ const _ = require('lodash');
 const GenericController = require('./GenericController');
 const Response = require('./../Response.js');
 
-const ExcerciseModel = require('./../../Models/Excercise.js');
+const Excercise = require('./../../Models/Excercise.js');
 const ExcerciseDb = require('../../Data/Excercise.js');
 
 module.exports = class ExcerciseController extends GenericController{
@@ -15,37 +15,19 @@ module.exports = class ExcerciseController extends GenericController{
     }
 
     Create(request, response){
-        let excercise = new ExcerciseModel();
-
-        let excerciseJson = request.body;
-        delete excerciseJson.Id;
-        _.assignIn(excercise, excerciseJson);
-
-        this.Response = response;
-        this.Database.Create(excercise, _.bind(this.SendResponse, this));
+        this.Database.Create(Excercise.CreateFrom(request.body), this.SendResponseFunc(response));
     }
 
     Read(request, response){
-        this.Response = response;
-        this.Database.Read(request.body, _.bind(this.SendResponse, this));
+        this.Database.Read(request.body, this.SendResponseFunc(response));
     }
 
     Update(request, response){
-        this.Response = response;
-        this.Database.Update(request.body, _.bind(this.SendResponse, this));
+        this.Database.Update(request.body, this.SendResponseFunc(response));
     }
 
     Delete(request, response){
-        this.Response = response;
-        this.Database.Delete(request.body, _.bind(this.SendResponse, this));
-    }
-
-    GetWorkoutFromJson(request){
-        let excercise = new Workout();
-        let excerciseJson = request.body;
-        delete excerciseJson.Id;
-        _.assignIn(user, excerciseJson);
-        return excercise;
+        this.Database.Delete(request.body, this.SendResponseFunc(response));
     }
 
     Setup(){

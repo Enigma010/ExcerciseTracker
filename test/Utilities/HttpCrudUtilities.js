@@ -8,9 +8,13 @@ module.exports = class HttpCrudUtilities{
         let promise = WebRequest.ModelRequestCreate(server, model, modelNoun);
         promise.then(function(body){
             assertFunc(body, model);
-            doneFunc();
+            if(doneFunc){
+                doneFunc();
+            }
         }).catch(function(response){
-            doneFunc(new Error(response));
+            if(doneFunc){
+                doneFunc(new Error(response));
+            }
         });
     }
 
@@ -21,12 +25,18 @@ module.exports = class HttpCrudUtilities{
             let readPromise = WebRequest.ModelRequestRead(server, {Id: body.Data[0].Id }, modelNoun);
             readPromise.then(function(body){
                 readAssertFunc(body, model);
-                doneFunc();
+                if(doneFunc){
+                    doneFunc();
+                }
             }).catch(function(response){
-                doneFunc(new Error(response));
+                if(doneFunc){
+                    doneFunc(new Error(response));
+                }
             });
         }).catch(function(response){
-            doneFunc(new Error(response));
+            if(doneFunc){
+                doneFunc(new Error(response));
+            }
         });
     }
 
@@ -41,15 +51,23 @@ module.exports = class HttpCrudUtilities{
                 let readPromise = WebRequest.ModelRequestRead(server, model, modelNoun);
                 readPromise.then(function(body){
                     readAssertFunc(body, model);
-                    doneFunc();
+                    if(doneFunc){
+                        doneFunc();
+                    }
                 }).catch(function(response){
-                    doneFunc(new Error(response));
+                    if(doneFunc){
+                        doneFunc(new Error(response));
+                    }
                 });
             }).catch(function(response){
-                doneFunc(new Error(response));
+                if(doneFunc){
+                    doneFunc(new Error(response));
+                }
             });
         }).catch(function(response){
-            doneFunc(new Error(response));
+            if(doneFunc){
+                doneFunc(new Error(response));
+            }
         });
     }
 
@@ -63,15 +81,23 @@ module.exports = class HttpCrudUtilities{
                 let readPromise = WebRequest.ModelRequestRead(server, model, modelNoun);
                 readPromise.then(function(body){
                     readAssertFunc(body, model);
-                    doneFunc();
+                    if(doneFunc){
+                        doneFunc();
+                    }
                 }).catch(function(response){
-                    doneFunc(new Error(response));
+                    if(doneFunc){
+                        doneFunc(new Error(response));
+                    }
                 });
             }).catch(function(response){
-                doneFunc(new Error(response));
+                if(doneFunc){
+                    doneFunc(new Error(response));
+                }
             });
         }).catch(function(response){
-            doneFunc(new Error(response));
+            if(doneFunc){
+                doneFunc(new Error(response));
+            }
         });
     }
 }

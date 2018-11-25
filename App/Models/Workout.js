@@ -8,4 +8,11 @@ module.exports = class Workout{
         Generic.AddGuidId(this, id);
         this.Excercises = [];
     }
+
+    static CreateFrom(model){
+        let workout = new Workout();
+        delete model.Id;
+        _.assignIn(workout, model);
+        return workout;
+    };
 }

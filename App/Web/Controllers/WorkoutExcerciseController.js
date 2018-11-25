@@ -4,7 +4,7 @@ const _ = require('lodash');
 const GenericController = require('./GenericController');
 const Response = require('./../Response.js');
 
-const WorkoutExcerciseDb = require('./../../Data/WorkoutExcercises.js');
+const WorkoutExcerciseDb = require('../../Data/WorkoutExcercise.js');
 
 module.exports = class WorkoutExcerciseController{
     

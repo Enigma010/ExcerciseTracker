@@ -17,16 +17,20 @@ module.exports = class Generic{
                 callback(error);
             }
             else{
-                if(!_.isNull(readRequest) && !_.isUndefined(readRequest) && !_.isNull(readQuery) && !_.isUndefined(readQuery)){
-                    self.ReadByQuery(readRequest, readQuery, function(error, dataRunQuery){
-                        callback(error, dataRunQuery);
-                    });
-                }
-                else{
-                    self.Read(data, callback);
-                }
+                self.ReadWithOverride(data, callback, readRequest, readQuery);
             }
         });
+    }
+
+    ReadWithOverride(data, callback, readRequest, readQuery){
+        if(!_.isNull(readRequest) && !_.isUndefined(readRequest) && !_.isNull(readQuery) && !_.isUndefined(readQuery)){
+            this.ReadByQuery(readRequest, readQuery, function(error, dataRunQuery){
+                callback(error, dataRunQuery);
+            });
+        }
+        else{
+            this.Read(data, callback);
+        }
     }
 
     Read(data, callback){

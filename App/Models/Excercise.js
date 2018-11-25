@@ -8,4 +8,11 @@ module.exports = class Excercise{
     constructor(id){
         Generic.AddGuidId(this, id);
     }
+
+    static CreateFrom(model){
+        let excercise = new Excercise();
+        delete model.Id;
+        _.assignIn(excercise, model);
+        return excercise;
+    }
 }

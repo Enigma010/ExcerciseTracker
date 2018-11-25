@@ -15,37 +15,19 @@ module.exports = class UserController extends GenericController{
     }
 
     Create(request, response){
-        let user = new User();
-
-        let userJson = request.body;
-        delete userJson.Id;
-        _.assignIn(user, userJson);
-
-        this.Response = response;
-        this.Database.Create(user, _.bind(this.SendResponse, this));
+        this.Database.Create(User.CreateFrom(request.body), this.SendResponseFunc(response));
     }
 
     Read(request, response){
-        this.Response = response;
-        this.Database.Read(request.body, _.bind(this.SendResponse, this));
+        this.Database.Read(request.body, this.SendResponseFunc(response));
     }
 
     Update(request, response){
-        this.Response = response;
-        this.Database.Update(request.body, _.bind(this.SendResponse, this));
+        this.Database.Update(request.body, this.SendResponseFunc(response));
     }
 
     Delete(request, response){
-        this.Response = response;
-        this.Database.Delete(request.body, _.bind(this.SendResponse, this));
-    }
-
-    GetUserFromJson(request){
-        let user = new User();
-        let userJson = request.body;
-        delete userJson.Id;
-        _.assignIn(user, userJson);
-        return user;
+        this.Database.Delete(request.body, this.SendResponseFunc(response));
     }
 
     Setup(){

@@ -7,7 +7,7 @@ const WorkoutInstanceModel = require('../Models/WorkoutInstance.js');
 const ExcerciseInstanceModel = require('../Models/ExcerciseInstance.js');
 
 const WorkoutDb = require('./Workout.js');
-const WorkoutExcercisesDb = require('./WorkoutExcercises.js');
+const WorkoutExcercisesDb = require('./WorkoutExcercise.js');
 const ExcerciseDb = require('./Excercise');
 const ExcerciseInstanceDb = require('./Excercise')
 

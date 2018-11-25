@@ -4,6 +4,7 @@ const request = require('request');
 const uuidv4 = require('uuid/v4');
 
 const ExcerciseTrackerServerUtilities = require('../Utilities/ExcerciseTrackerServerUtilities.js');
+const Excercise = require('../../App/Models/Excercise.js');
 const WebRequest = require('../../App/Web/Utilities/WebRequest.js');
 const HttpCrudUtilities = require('../Utilities/HttpCrudUtilities.js');
 
@@ -26,21 +27,24 @@ describe('Data', function () {
             assert.equal(body.Data[0].Name, model.Name);
         };
 
-        it('Create', function (done) {
-            let excercise = {};
+        var excerciseCreateFunc = function(){
+            let excercise = new Excercise();
             excercise.Name = uuidv4();
+            return excercise;
+        }
+
+        it('Create', function (done) {
+            let excercise = excerciseCreateFunc();
             HttpCrudUtilities.CreateUnitTest(server, excercise, 'excercise', assertFunc, done);
         });
 
         it('Read', function (done) {
-            let excercise = {};
-            excercise.Name = uuidv4();
+            let excercise = excerciseCreateFunc();
             HttpCrudUtilities.ReadUnitTest(server, excercise, 'excercise', assertFunc, assertFunc, done);
         });
 
         it('Update', function(done){
-            let excercise = {};
-            excercise.Name = uuidv4();
+            let excercise = excerciseCreateFunc();
             let updateModelFunc = function(model){
                 model.Name = require('uuid/v4')();
             };
@@ -48,8 +52,7 @@ describe('Data', function () {
         });
 
         it('Delete', function (done) {
-            let excercise = {};
-            excercise.Name = uuidv4();
+            let excercise = excerciseCreateFunc();
             let readAssertFunc = function(body, model){
                 assert.equal(Array.isArray(body.Data), true);
                 assert.equal(body.Data.length, 0);

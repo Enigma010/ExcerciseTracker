@@ -15,10 +15,24 @@ module.exports = class GenericController{
         this.Database.Create(model, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
+    SendResponseFunc(response){
+        return _.bind(function(error, data){
+            let errorResponse = this.GetErrorResponse(error);
+            if(_.isUndefined(data) || _.isNull(data)){
+                data = [];
+            }
+            errorResponse.Data = data;
+            response.json(errorResponse);
+        }, this);
+    }
+
     SendResponse(error, data){
-        let response = this.GetErrorResponse(error);
-        response.Data = data;
-        this.Response.json(response);
+        let errorResponse = this.GetErrorResponse(error);
+        if(_.isUndefined(data) || _.isNull(data)){
+            data = [];
+        }
+        errorResponse.Data = data;
+        this.Response.json(errorResponse);
     }
 
     GetErrorResponse(error){        
