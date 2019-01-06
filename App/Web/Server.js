@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const UserController = require('./Controllers/UserController.js');
 const WorkoutController = require('./Controllers/WorkoutController.js');
 const ExcerciseController = require('./Controllers/ExcerciseController.js');
-const WorkoutExcerciseController = require('./Controllers/WorkoutExcerciseController');
 const WorkoutInstanceController = require('./Controllers/WorkoutInstanceController.js');
-const ExcerciseInstanceController = require('./Controllers/ExcerciseInstanceController.js');
+
+const WorkoutExcercise = require('../Data/WorkoutExcercise.js');
+const ExcerciseInstance = require('../Data/ExcerciseInstance.js');
 
 module.exports = class Server{
     constructor(listenOnPort, database){
@@ -15,15 +16,25 @@ module.exports = class Server{
         this.Server.use(bodyParser.json());
         this.Listener = this.Server.listen(this.ListenOnPort);
         this.Database = database;
+        this.Controllers = [];
+        this.DataModels = [];
+        this.Setup();
+    }
+
+    Setup(){
         this.SetupControllers();
+        this.SetupDataModels();
     }
 
     SetupControllers(){
-        let userController = new UserController(this, this.Database);
-        let workutController = new WorkoutController(this, this.Database);
-        let excerciseController = new ExcerciseController(this, this.Database);
-        let workoutExcerciseController = new WorkoutExcerciseController(this, this.Database);
-        let workoutInstanceController = new WorkoutInstanceController(this, this.Database);
-        let excerciseInstanceController = new ExcerciseInstanceController(this, this.Database);
+        this.Controllers['UserController'] = new UserController(this, this.Database);
+        this.Controllers['WorkoutController'] = new WorkoutController(this, this.Database);
+        this.Controllers['ExcerciseController'] = new ExcerciseController(this, this.Database);
+        this.Controllers['WorkoutInstanceController'] = new WorkoutInstanceController(this, this.Database);
+    }
+
+    SetupDataModels(){
+        this.DataModels['WorkoutExcercise'] = new WorkoutExcercise(this.Database);
+        this.DataModels['ExcerciseInstance'] = new ExcerciseInstance(this.Database);
     }
 }

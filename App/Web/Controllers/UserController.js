@@ -31,9 +31,9 @@ module.exports = class UserController extends GenericController{
     }
 
     Setup(){
-        this.Server.Server.post('/user/create', _.bind(this.Create, this));
-        this.Server.Server.post('/user/read', _.bind(this.Read, this));
-        this.Server.Server.post('/user/update', _.bind(this.Update, this));
-        this.Server.Server.post('/user/delete', _.bind(this.Delete, this));
+        this.SetupNounCreateHandleRequest('user', _.bind(this.Create, this));
+        this.SetupNounReadHandleRequest('user', _.bind(this.Read, this));
+        this.SetupNounUpdateHandleRequest('user', _.bind(this.Update, this));
+        this.SetupNounDeleteHandleRequest('user', _.bind(this.Delete, this));
     }
 }

@@ -31,9 +31,9 @@ module.exports = class ExcerciseController extends GenericController{
     }
 
     Setup(){
-        this.Server.Server.post('/excercise/create', _.bind(this.Create, this));
-        this.Server.Server.post('/excercise/read', _.bind(this.Read, this));
-        this.Server.Server.post('/excercise/update', _.bind(this.Update, this));
-        this.Server.Server.post('/excercise/delete', _.bind(this.Delete, this));
+        this.SetupNounCreateHandleRequest('excercise', _.bind(this.Create, this));
+        this.SetupNounReadHandleRequest('excercise', _.bind(this.Read, this));
+        this.SetupNounUpdateHandleRequest('excercise', _.bind(this.Update, this));
+        this.SetupNounDeleteHandleRequest('excercise', _.bind(this.Delete, this));
     }
 }

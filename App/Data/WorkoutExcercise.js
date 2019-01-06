@@ -7,11 +7,11 @@ module.exports = class WorkoutExcercise extends Generic{
     constructor(database){
         super(database,
             {
-                Create: "insert into WorkoutExcercises (WorkoutId, ExcerciseId, Position) values ($WorkoutId, $ExcerciseId, $Position)",
+                Create: "insert into WorkoutExcercises (WorkoutId, ExcerciseId, Position, ProjectedReps, ProjectedTimeInSeconds) values ($WorkoutId, $ExcerciseId, $Position, $ProjectedReps, $ProjectedTimeInSeconds)",
                 Read: "select * from WorkoutExcercises where WorkoutId = $WorkoutId and ExcerciseId = $ExcerciseId",
-                Update: "update WorkoutExcercises set Position = ?Position where $WorkoutId and ExcerciseId = $ExcerciseId",
+                Update: "update WorkoutExcercises set Position = $Position, ProjectedReps = $ProjectedReps, ProjectedTimeInSeconds = $ProjectedTimeInSeconds where $WorkoutId and ExcerciseId = $ExcerciseId",
                 Delete: "delete from WorkoutExcercises where WorkoutId = $WorkoutId and ExcerciseId = $ExcerciseId",
-                Setup: 'create table if not exists WorkoutExcercises (WorkoutId text not null, ExcerciseId text not null, Position int, primary key(WorkoutId, ExcerciseId))'
+                Setup: 'create table if not exists WorkoutExcercises (WorkoutId text not null, ExcerciseId text not null, Position int, ProjectedReps int, ProjectedTimeInSeconds int, primary key(WorkoutId, ExcerciseId))'
             }
         );
     }

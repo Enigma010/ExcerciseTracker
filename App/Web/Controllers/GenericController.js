@@ -15,6 +15,47 @@ module.exports = class GenericController{
         this.Database.Create(model, _.bind(this.GenericController.SendResponse, this.GenericController));
     }
 
+    SetupNounCreateHandleRequest(noun, handler){
+        this.SetupNounVerbHandleRequest(noun, 'create', handler);
+    }
+
+    SetupNounReadHandleRequest(noun, handler){
+        this.SetupNounVerbHandleRequest(noun, 'read', handler);
+    }
+
+    SetupNounUpdateHandleRequest(noun, handler){
+        this.SetupNounVerbHandleRequest(noun, 'update', handler);
+    }
+
+    SetupNounDeleteHandleRequest(noun, handler){
+        this.SetupNounVerbHandleRequest(noun, 'delete', handler);
+    }
+
+    SetupNounVerbHandleRequest(noun, verb, handler){
+        this.SetupHandleRequest('/' + noun + '/' + verb, handler);
+    }
+
+    SetupHandleRequest(route, handler){
+        let handleFunc = _.bind(function(request, response){
+            handler(request, response);
+        }, this);
+
+        let handleRequestFunc = _.bind(function(request, response){
+            this.HandleRequest(request, response, handleFunc);
+        }, this);
+
+        this.Server.Server.post(route, handleRequestFunc);
+    }
+
+    HandleRequest(request, response, handler){
+        try{
+            handler(request, response);
+        }
+        catch(error){
+            this.SendResponse(error);
+        }
+    }
+
     SendResponseFunc(response){
         return _.bind(function(error, data){
             let errorResponse = this.GetErrorResponse(error);

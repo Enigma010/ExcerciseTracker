@@ -22,7 +22,7 @@ module.exports = class HttpCrudUtilities{
         let createPromise = WebRequest.ModelRequestCreate(server, model, modelNoun);
         createPromise.then(function(body){
             createAssertFunc(body, model);
-            let readPromise = WebRequest.ModelRequestRead(server, {Id: body.Data[0].Id }, modelNoun);
+            let readPromise = WebRequest.ModelRequestRead(server, { Id: body.Data[0].Id }, modelNoun);
             readPromise.then(function(body){
                 readAssertFunc(body, model);
                 if(doneFunc){

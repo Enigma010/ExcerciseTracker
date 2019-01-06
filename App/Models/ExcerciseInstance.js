@@ -4,33 +4,16 @@ const _ = require('lodash');
 const Generic = require('./Generic.js');
 
 module.exports = class ExcerciseInstance{
-    constructor(id, setNumber, timeInSeconds){
+    constructor(id){
         Generic.AddGuidId(this, id);
-        if(!_.isNull(setNumber)){
-            this.SetNumber = setNumber;
-        }
-        else if(!_.isNull(timeInSeconds)){
-            this.TimeInSeconds = timeInSeconds;
-        }
-        else{
+        this.SetNumber = null;
+        this.TimeInSeconds = null;
+    }
+
+    Validate(){
+        if(_.isNull(this.SetNumber) && _.isNull(this.TimeInSeconds)){
             let error = "An instance of an excercise needs either a set number or time duration";
             throw error;
         }
-    }
-
-    static InstancesFromExcercise(excercise){
-        let instances = [];
-        if(excercise.NumberOfSets){
-            for(let setNumber = 0; excercise.NumberOfSets < setNumber; setNumber++){
-                instances[instances.length] = new ExcerciseInstance(null, setNumber, 0);
-            }
-        }
-        else if(excercise.TimeInSeconds){
-            instances[instances.length] = new ExcerciseInstance(null, 0, excercise.TimeInSeconds);
-        }
-        else{
-            instances[instances.length] = new ExcerciseInstance(null, 0, 0);
-        }
-        return instances;
     }
 }

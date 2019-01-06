@@ -45,6 +45,9 @@ module.exports = class Workout extends Generic{
                     let readExcercise = {};
                     readExcercise.Id = workoutExcercise.ExcerciseId;
                     excerciseDb.Read(readExcercise, function(error, excerciseResult){
+                        if(error){
+                            callback(error);
+                        }
                         if(!_.isUndefined(excerciseResult) && !_.isNull(excerciseResult) && excerciseResult.length > 0){
                             if(_.isUndefined(results[0].Excercises)){
                                 results[0].Excercises = [];
