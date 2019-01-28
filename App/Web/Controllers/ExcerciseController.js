@@ -15,7 +15,7 @@ module.exports = class ExcerciseController extends GenericController{
     }
 
     Create(request, response){
-        this.Database.Create(Excercise.CreateFrom(request.body), this.SendResponseFunc(response));
+        this.Database.Create(Excercise.Copy(request.body), this.SendResponseFunc(response));
     }
 
     Read(request, response){

@@ -3,6 +3,7 @@ const assert = require('assert');
 const uuidv4 = require('uuid/v4');
 
 const Excercise = require('../../App/Models/Excercise.js');
+const ExcerciseIntent = require('../../App/Models/ExcerciseIntent.js');
 const Workout = require('../../App/Models/Workout.js');
 
 const ExcerciseTrackerServerUtilities = require('../Utilities/ExcerciseTrackerServerUtilities.js');
@@ -27,14 +28,14 @@ describe('Data', function () {
             let dbModel = body.Data[0];
             assert.equal(dbModel.Name, workoutModel.Name);
             assert.equal(dbModel.Description, workoutModel.Description);
-            assert.equal(Boolean(dbModel.Excercises), Boolean(workoutModel.Excercises));
-            if(workoutModel.Excercises && dbModel.Excercises){
-                assert.equal(dbModel.Excercises.length, workoutModel.Excercises.length);
+            assert.equal(Boolean(dbModel.ExcerciseIntents), Boolean(workoutModel.ExcerciseIntents));
+            if(workoutModel.ExcerciseIntents && dbModel.ExcerciseIntents){
+                assert.equal(dbModel.ExcerciseIntents.length, workoutModel.ExcerciseIntents.length);
                 let position = 0;
-                _.forEach(workoutModel.Excercises, function(modelExcercise){
-                    let dbExcercise = body.Data[0].Excercises[position];
-                    assert.equal(dbExcercise.Id, modelExcercise.Id);
-                    assert.equal(dbExcercise.Name, modelExcercise.Name);
+                _.forEach(workoutModel.ExcerciseIntents, function(modelExcerciseIntent){
+                    let dbExcerciseIntent = body.Data[0].ExcerciseIntents[position];
+                    assert.equal(dbExcerciseIntent.Id, modelExcerciseIntent.Id);
+                    assert.equal(dbExcerciseIntent.Name, modelExcerciseIntent.Name);
                     position++;
                 });
             }
@@ -53,84 +54,74 @@ describe('Data', function () {
             return workout;            
         }
 
-        let excercisesFunc = function(){
-            let excercises = [];
+        let excerciseIntentsFunc = function(){
+            let excerciseIntents = [];
             for(let number = 0; number < 2; number++){
+                let excerciseIntent = new ExcerciseIntent();
+                
+                if(number == 0){
+                    excerciseIntent.IsSetBased = true;
+                    excerciseIntent.ProjectedReps = 10;
+                }
+                else{
+                    excerciseIntent.IsTimeBased = true;
+                    excerciseIntent.ProjectedTimeInSeconds = 60;
+                }
+
                 let excercise = new Excercise();
                 excercise.Name = uuidv4();
-                excercises.push(excercise);
+
+                excerciseIntent.Excercise = excercise;
+
+                excerciseIntents.push(excerciseIntent);
             }
-            return excercises;
+            return excerciseIntents;
         }
 
-        let workoutExcercisesFunc = function(){
+        let workoutExcerciseIntentsFunc = function(){
             let workout = workoutFunc();
-            workout.Excercises = excercisesFunc();
+            workout.ExcerciseIntents = excerciseIntentsFunc();
             return workout;
         }
 
-        let createWorkoutExcercisesFunc = function (done, workout) {
+        let createWorkoutExcerciseIntentsFunc = function (done, workout) {
             let excercisesCreatedCount = 0;
-            _.forEach(workout.Excercises, function(excercise){
-                HttpCrudUtilities.CreateUnitTest(server, excercise, 'excercise', function(excerciseBody, excerciseModel){
+            _.forEach(workout.ExcerciseIntents, function(excerciseIntent){
+                HttpCrudUtilities.CreateUnitTest(server, excerciseIntent.Excercise, 'excercise', function(excerciseBody, excerciseModel){
                     excerciseAssertFunc(excerciseBody, excerciseModel);
                     excercisesCreatedCount++;
-                    if(excercisesCreatedCount == workout.Excercises.length){
+                    if(excercisesCreatedCount == workout.ExcerciseIntents.length){
                         HttpCrudUtilities.CreateUnitTest(server, workout, 'workout', assertFunc, done);
-                    }
-                });
-            });
-        };
-        
-        let createExcercisesFunc = function (done, workout) {
-            let excercisesCreatedCount = 0;
-            _.forEach(workout.Excercises, function(excercise){
-                HttpCrudUtilities.CreateUnitTest(server, excercise, 'excercise', function(excerciseBody, excerciseModel){
-                    excerciseAssertFunc(excerciseBody, excerciseModel);
-                    excercisesCreatedCount++;
-                    if(excercisesCreatedCount == workout.Excercises.length){
-                        done();
                     }
                 });
             });
         };
 
         it('Create', function (done) {
-            let workout = workoutExcercisesFunc();
-            createWorkoutExcercisesFunc(done, workout);
+            let workout = workoutExcerciseIntentsFunc();
+            createWorkoutExcerciseIntentsFunc(done, workout);
         });
 
         it('Read', function (done) {
-            let workout = workoutExcercisesFunc();
-            let readWorkoutFunc = function(){
-                HttpCrudUtilities.ReadUnitTest(server, workout, 'workout', assertFunc, assertFunc, done);
-            };
-            createExcercisesFunc(readWorkoutFunc, workout);
+            let workout = workoutExcerciseIntentsFunc();
+            HttpCrudUtilities.ReadUnitTest(server, workout, 'workout', assertFunc, assertFunc, done);
         });
 
-        // it('Update', function(done){
-        //     let workout = workoutFunc();
-        //     let updateWorkoutFunc = function(){
-        //         let updateModelFunc = function(model){
-        //             let uuid = require('uuid/v4')
-        //             model.Name = uuid();
-        //             model.Description = uuid();
-        //         };
-        //         HttpCrudUtilities.UpdateUnitTest(server, workout, 'workout', assertFunc, updateModelFunc, assertFunc, done);
-        //     }
-        //     createWorkoutExcercisesFunc(updateWorkoutFunc, workout);
-        // });
+        it('Update', function(done){
+            let workout = workoutExcerciseIntentsFunc();
 
-        // it('Delete', function (done) {
-        //     let workout = workoutFunc();
-        //     let deleteWorkoutFunc = function(){
-        //         let readAssertFunc = function(body, model){
-        //             assert.equal(Array.isArray(body.Data), true);
-        //             assert.equal(body.Data.length, 0);
-        //         };
-        //         HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', assertFunc, readAssertFunc, done);
-        //     };
-        //     createWorkoutExcercisesFunc(deleteWorkoutFunc, workout);
-        // });
+            let updateFunc = function(){
+                workout.Name = uuidv4();
+                workout.Description = uuidv4();
+                workout.ExcerciseIntents.pop();
+            };
+
+            HttpCrudUtilities.UpdateUnitTest(server, workout, 'workout', assertFunc, updateFunc, assertFunc, done);
+        });
+
+        it('Delete', function (done) {
+            let workout = workoutExcerciseIntentsFunc();
+            HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', assertFunc, assertFunc, done);
+        });
     });
 });

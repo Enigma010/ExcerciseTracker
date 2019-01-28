@@ -20,6 +20,7 @@ describe('Model', function () {
         it('Valid', function (done) {
             let excercise = new Excercise();
             excercise.Name = "Name";
+            excercise.IsSetBased = true;
             assert.equal(validModel(excercise), true);
             done();
         });
@@ -32,6 +33,7 @@ describe('Model', function () {
 
         it('Not Set or Time Based', function(done){
             let excercise = new Excercise();
+            excercise.Name = "Name";
             excercise.IsSetBased = false;
             excercise.IsTimeBased = false;
             assert.equal(validModel(excercise), false);

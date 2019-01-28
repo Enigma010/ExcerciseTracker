@@ -1,13 +1,23 @@
 const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
 
+const Excercise = require('./Excercise.js');
 const Generic = require('./Generic.js');
 
 module.exports = class ExcerciseIntent{
     constructor(id){
         Generic.AddGuidId(this, id);
-        this.ProjectedReps = -1;
-        this.ProjectedTimeInSeconds = -1;
+    }
+
+    static Copy(copyFrom){
+        if(!copyFrom){
+            return undefined;
+        }
+        var copy = new ExcerciseIntent();
+        _.assignIn(copy, copyFrom);
+        copy.Id = copyFrom.Id;
+        copy.Excercise = Excercise.Copy(copyFrom.Excercise);
+        return copy;
     }
 
     Validate(){

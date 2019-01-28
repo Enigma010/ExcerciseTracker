@@ -1,7 +1,7 @@
 const sqlite = require('sqlite3');
 const _ = require('lodash');
 
-const WorkoutExcerciseDb = require('../Data/WorkoutExcercise.js');
+const ExcerciseIntentDb = require('../Data/ExcerciseIntent');
 const ExcerciseDb = require('../../App/Data/Excercise.js');
 const Generic = require('./Generic.js');
 
@@ -9,14 +9,14 @@ module.exports = class Workout extends Generic{
     constructor(database){
         super(database, 
             {
-                Create: "insert into Workouts (Id, Name, Description) values ($Id, $Name, $Description)",
-                Read: "select * from Workouts where Id = $Id",
-                Update: "update Workouts set Name = $Name, Description = $Description where Id = $Id",
-                Delete: "delete from Workouts where Id = $Id",
+                Create: 'insert into Workouts (Id, Name, Description) values ($Id, $Name, $Description)',
+                Read: 'select * from Workouts where Id = $Id',
+                Update: 'update Workouts set Name = $Name, Description = $Description where Id = $Id',
+                Delete: 'delete from Workouts where Id = $Id',
                 Setup: 'create table if not exists Workouts (Id text not null, Name text, Description text, primary key (Id))'
             }
         );
-        this.WorkoutExcerciseDb = new WorkoutExcerciseDb(this.Database); 
+        this.ExcerciseIntentDb = new ExcerciseIntentDb(this.Database); 
     }
 
     Create(data, callback){
@@ -24,42 +24,32 @@ module.exports = class Workout extends Generic{
     }
 
     Read(data, callback){
-        var self = this;
-        super.Read(data, function(error, results){
+        let self = this;
+        let workout = {};
+
+        super.Read(data, function(error, workoutRead){
             if(error){
                 callback(error);
+                return;
             }
-            if(_.isUndefined(results) || results.length == 0){
-                callback(error, results)
+
+            if(_.isUndefined(workoutRead) || workoutRead.length == 0){
+                callback(error, workout)
+                return;
             }
-            let excerciseDb = new ExcerciseDb(self.Database);
-            let workoutExcerciseQuery = "select * from WorkoutExcercises where WorkoutId = $Id";
-            let workoutData = {};
-            workoutData.WorkoutId = data.Id;
-            self.ReadByQuery(data, workoutExcerciseQuery, function(error, workoutExcercises){
+
+            self.ExcerciseIntentDb.ReadByOwner(workoutRead[0].Id, function(error, excerciseIntentsRead){
                 if(error){
                     callback(error);
+                    return;
                 }
-                let workoutExcercisesRead = 0;
-                _.forEach(workoutExcercises, function(workoutExcercise){
-                    let readExcercise = {};
-                    readExcercise.Id = workoutExcercise.ExcerciseId;
-                    excerciseDb.Read(readExcercise, function(error, excerciseResult){
-                        if(error){
-                            callback(error);
-                        }
-                        if(!_.isUndefined(excerciseResult) && !_.isNull(excerciseResult) && excerciseResult.length > 0){
-                            if(_.isUndefined(results[0].Excercises)){
-                                results[0].Excercises = [];
-                            }
-                            results[0].Excercises[workoutExcercise.Position] = excerciseResult[0];
-                        }
-                        workoutExcercisesRead++;
-                        if(workoutExcercisesRead == workoutExcercises.length){
-                            callback(null, results);
-                        }
-                    });
-                });
+                if(!_.isUndefined(excerciseIntentsRead) && !_.isNull(excerciseIntentsRead) && excerciseIntentsRead.length > 0){
+                    workoutRead[0].ExcerciseIntents = excerciseIntentsRead;
+                }
+                else{
+                    workoutRead[0].ExcerciseIntents = [];
+                }
+                callback(null, workoutRead);
             });
         });
     }
@@ -71,7 +61,7 @@ module.exports = class Workout extends Generic{
     Delete(data, callback){
         let deleteWorkout = {};
         deleteWorkout.Id = data.Id;
-        deleteWorkout.Excercises = [];
+        deleteWorkout.ExcerciseIntents = [];
         this.RunQueryUpsertExcercises(deleteWorkout, this.Statements.Delete, callback);
     }
 
@@ -90,7 +80,7 @@ module.exports = class Workout extends Generic{
                 self.Read(data, callback);
             };
 
-            self.WorkoutExcerciseDb.Upsert(data.Excercises, data.Id, readFunc);
+            self.ExcerciseIntentDb.Upsert(data.ExcerciseIntents, data.Id, readFunc);
         });
     }
 }

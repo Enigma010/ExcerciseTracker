@@ -22,6 +22,8 @@ describe('Model', function () {
             let excerciseIntent = new ExcerciseIntent();
             excerciseIntent.Excercise = new Excercise();
             excerciseIntent.Excercise.Name = 'Name';
+            excerciseIntent.Excercise.IsSetBased = true;
+            excerciseIntent.IsSetBased = true;
             excerciseIntent.ProjectedReps = 10;
             assert.equal(validModel(excerciseIntent), true);
             done();
