@@ -34,7 +34,8 @@ module.exports = class Workout extends Generic{
             }
 
             if(_.isUndefined(workoutRead) || workoutRead.length == 0){
-                callback(error, workout)
+                workoutRead = [];
+                callback(error, workoutRead);
                 return;
             }
 

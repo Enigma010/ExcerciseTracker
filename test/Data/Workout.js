@@ -121,7 +121,13 @@ describe('Data', function () {
 
         it('Delete', function (done) {
             let workout = workoutExcerciseIntentsFunc();
-            HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', assertFunc, assertFunc, done);
+
+            let readAssertFunc = function(body, model){
+                assert.equal(Array.isArray(body.Data), true);
+                assert.equal(body.Data.length, 0);
+            };
+
+            HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', assertFunc, readAssertFunc, done);
         });
     });
 });
