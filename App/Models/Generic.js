@@ -8,4 +8,14 @@ module.exports = class Generic{
             model.Id = uuidv4();
         }
     }
+
+    static ChangeId(model, idName){
+        if(!idName){
+            idName = 'Id';
+        }
+        if(model.hasOwnProperty(idName)){
+            delete model[idName];
+        }
+        model[idName] = uuidv4();
+    }
 }

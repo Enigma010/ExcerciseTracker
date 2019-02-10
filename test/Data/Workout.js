@@ -5,6 +5,7 @@ const uuidv4 = require('uuid/v4');
 const Excercise = require('../../App/Models/Excercise.js');
 const ExcerciseIntent = require('../../App/Models/ExcerciseIntent.js');
 const Workout = require('../../App/Models/Workout.js');
+const WebRequest = require('../../App/Web/Utilities/WebRequest.js');
 
 const ExcerciseTrackerServerUtilities = require('../Utilities/ExcerciseTrackerServerUtilities.js');
 const HttpCrudUtilities = require('../Utilities/HttpCrudUtilities.js');
@@ -70,9 +71,7 @@ describe('Data', function () {
 
                 let excercise = new Excercise();
                 excercise.Name = uuidv4();
-
                 excerciseIntent.Excercise = excercise;
-
                 excerciseIntents.push(excerciseIntent);
             }
             return excerciseIntents;
@@ -128,6 +127,25 @@ describe('Data', function () {
             };
 
             HttpCrudUtilities.DeleteUnitTest(server, workout, 'workout', assertFunc, readAssertFunc, done);
+        });
+
+        it('Copy', function (done) {
+            let workout = workoutExcerciseIntentsFunc();
+            var copyPromise = WebRequest.ModelRequest(server, workout, '/workout/copy');
+            copyPromise.then(function(response){
+                if(WebRequest.IsHttpErrorResponse(response.statusCode)){
+                    done(new Error(response));
+                }
+                assert.equal(Array.isArray(response.Data), true);
+                assert.equal(1, response.Data.length);
+                let dbWorkout = response.Data[0];
+                assert.notEqual(dbWorkout.Id, workout.Id);
+                assert.equal(dbWorkout.ExcerciseIntents.length, dbWorkout.ExcerciseIntents.length);
+                assert.notEqual(dbWorkout.ExcerciseIntents[0].Id, workout.ExcerciseIntents[0].Id);
+                done();
+            }).catch(function(response){
+                done(new Error(response));
+            });
         });
     });
 });
