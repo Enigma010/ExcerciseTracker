@@ -8,6 +8,7 @@ module.exports = class Workout{
     constructor(id){
         Generic.AddGuidId(this, id);
         this.ExcerciseIntents = [];
+        this.CreatedAt = Date.now();
     }
 
     AddSetBasedIntents(projectedNumberOfSets, projectedRepsPerSet, excercise){

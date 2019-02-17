@@ -96,6 +96,44 @@ describe('Data', function () {
             });
         };
 
+        let latestTestFunc = function(done, latest, assertFunc){
+            let workouts = [];
+            for(let index = 0; index < 5; index++){
+                workouts.push(workoutExcerciseIntentsFunc());
+            }
+            workouts[0].Name = "First";
+            workouts[1].Name = "Second";
+            workouts[2].Name = "Third";
+            workouts[3].Name = "Fourth";
+            workouts[4].Name = "Fifth";
+
+            workouts[0].CreatedAt = new Date('1970-01-01 01:00:00');
+            workouts[1].CreatedAt = new Date('1970-01-02 01:00:00');
+            workouts[2].CreatedAt = new Date('1970-01-03 01:00:00');
+            workouts[3].CreatedAt = new Date('1970-01-04 01:00:00');
+            workouts[4].CreatedAt = new Date('1970-01-05 01:00:00');
+
+            let workoutPromises = [];
+            _.forEach(workouts, function(workout){
+                workoutPromises.push(WebRequest.ModelRequestAction(server, workout, 'workout', 'create'));
+            });
+
+            Promise.all(workoutPromises).then(function(){
+                let latestPromise = WebRequest.ModelRequestAction(server, latest, 'workout', 'latest');
+                latestPromise.then(function(response){
+                    if(WebRequest.IsHttpErrorResponse(response.statusCode)){
+                        done(new Error(response));
+                    }
+                    assertFunc(response.Data);
+                    done();
+                }).catch(function(reject){
+                    done(new Error('Error finding latest workouts'));
+                });
+            }).catch(function(reject){
+                done(new Error('Error creating workouts'));
+            });
+        };
+
         it('Create', function (done) {
             let workout = workoutExcerciseIntentsFunc();
             createWorkoutExcerciseIntentsFunc(done, workout);
@@ -131,7 +169,7 @@ describe('Data', function () {
 
         it('Copy', function (done) {
             let workout = workoutExcerciseIntentsFunc();
-            var copyPromise = WebRequest.ModelRequest(server, workout, '/workout/copy');
+            var copyPromise = WebRequest.ModelRequestAction(server, workout, 'workout', 'copy');
             copyPromise.then(function(response){
                 if(WebRequest.IsHttpErrorResponse(response.statusCode)){
                     done(new Error(response));
@@ -146,6 +184,37 @@ describe('Data', function () {
             }).catch(function(response){
                 done(new Error(response));
             });
+        });
+
+        it('Latest Limited', function(done){
+            let latest = {
+                LimitNumber: 2
+            };
+            
+            let assertFunc = function(workouts){
+                assert.equal(Array.isArray(workouts), true);
+                assert.equal(2, workouts.length);
+                assert.equal(workouts[0].Name, 'Fifth');
+                assert.equal(workouts[1].Name, 'Fourth');
+            };
+
+            latestTestFunc(done, latest, assertFunc);
+        });
+
+        it('Latest CreatedAt', function(done){
+            let latest = {
+                CreatedAt: new Date('1970-01-03 01:00:00')
+            };
+            
+            let assertFunc = function(workouts){
+                assert.equal(Array.isArray(workouts), true);
+                assert.equal(3, workouts.length);
+                assert.equal(workouts[0].Name, 'Fifth');
+                assert.equal(workouts[1].Name, 'Fourth');
+                assert.equal(workouts[2].Name, 'Third');
+            };
+
+            latestTestFunc(done, latest, assertFunc);
         });
     });
 });

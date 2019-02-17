@@ -33,8 +33,11 @@ module.exports = class WorkoutController extends GenericController{
     }
 
     Copy(request, response){
-        request.body = Workout.CopyChangeIds(request.body);
-        this.Create(request, response);
+        this.Database.Copy(request.body, this.SendResponseFunc(response));
+    }
+
+    Latest(request, response){
+        this.Database.Latest(request.body, this.SendResponseFunc(response));
     }
 
     Setup(){
@@ -43,5 +46,6 @@ module.exports = class WorkoutController extends GenericController{
         this.SetupNounUpdateHandleRequest('workout', _.bind(this.Update, this));
         this.SetupNounDeleteHandleRequest('workout', _.bind(this.Delete, this));
         this.SetupNounVerbHandleRequest('workout', 'copy', _.bind(this.Copy, this));
+        this.SetupNounVerbHandleRequest('workout', 'latest', _.bind(this.Latest, this));
     }
 }
